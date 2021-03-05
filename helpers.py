@@ -43,7 +43,7 @@ def getResultItems(data, workspacePath):
         items.insert(0, ExtensionResultItem(
             icon='images/back.svg',
             name='Go back',
-            description='Go back to directory %s' % data['name'],
+            description='Go back to parent directory',
             on_enter=RenderResultListAction(getDirectoryItems('%s/../' % data['path']))
         ))
 
@@ -57,16 +57,16 @@ def getResultItems(data, workspacePath):
         ExtensionResultItem(
             icon='images/back.svg',
             name='Go back',
-            description='Go back to directory %s' % data['name'],
+            description='Go back to parent directory',
             on_enter=RenderResultListAction(getDirectoryItems('%s/../' % data['path']))
         ),
         ExtensionResultItem(
             icon='images/icon.svg',
-            name='Open in Atom editor',
+            name='Open in your editor',
             description='Open directory %s in your editor' % data['name'],
             on_enter=ExtensionCustomAction(
                 {
-                    'open_atom': True,
+                    'open_editor': True,
                     'path': data['path']
                 },
                 keep_app_open=True
@@ -79,4 +79,5 @@ def getResultItems(data, workspacePath):
             on_enter=RenderResultListAction(items)
         )
     ]
+
     return actions

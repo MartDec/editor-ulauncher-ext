@@ -8,10 +8,10 @@ from ulauncher.api.shared.action.ExtensionCustomAction import ExtensionCustomAct
 from helpers import *
 import os
 
-class AtomExtension(Extension):
+class EditorExtension(Extension):
 
     def __init__(self):
-        super(AtomExtension, self).__init__()
+        super(EditorExtension, self).__init__()
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
         self.subscribe(ItemEnterEvent, ItemEnterEventListener())
 
@@ -28,7 +28,7 @@ class ItemEnterEventListener(EventListener):
     def on_event(self, event, extension):
         data = event.get_data()
 
-        if 'open_atom' in data:
+        if 'open_editor' in data:
             subprocess.run([extension.preferences['application_bin'], data['path']])
         else:
             actions = getResultItems(data, extension.preferences['workspace_path'])
@@ -36,4 +36,4 @@ class ItemEnterEventListener(EventListener):
 
 
 if __name__ == '__main__':
-    AtomExtension().run()
+    EditorExtension().run()

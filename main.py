@@ -25,7 +25,6 @@ class KeywordQueryEventListener(EventListener):
 
 class ItemEnterEventListener(EventListener):
 
-
     def on_event(self, event, extension):
         data = event.get_data()
 

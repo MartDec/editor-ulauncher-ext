@@ -19,11 +19,12 @@ class EditorExtension(Extension):
 class KeywordQueryEventListener(EventListener):
 
     def on_event(self, event, extension):
-        items = getDirectoryItems(extension.preferences['workspace_path'], is_index=True)
+        items = getDirectoryItems(extension.preferences['workspace_path'], extension.preferences['workspace_path'])
         return RenderResultListAction(items)
 
 
 class ItemEnterEventListener(EventListener):
+
 
     def on_event(self, event, extension):
         data = event.get_data()

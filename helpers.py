@@ -22,43 +22,39 @@ def getSubdirectories(root):
 
 def getResultItem(itemData):
     return ExtensionResultItem(
-        icon='images/icon.svg',
+        icon='images/directory.svg',
         name=itemData['name'],
         description='%s directory' % itemData['name'],
         on_enter=ExtensionCustomAction(itemData, keep_app_open=True)
     )
 
-def getDirectoryItems(root, is_index=False):
+def getDirectoryItems(root, workspaceRoot, avoid_loop=False):
+    root = '%s/' % os.path.realpath(root)
+    print('root %s' % root)
+    print('workspaceRoot %s' % workspaceRoot)
     directories = getSubdirectories(root)
     results = []
+    if root != workspaceRoot:
+        results.append(ExtensionResultItem(
+            icon='images/back.svg',
+            name='Go back',
+            description='Go back to parent directory',
+            on_enter=RenderResultListAction(getDirectoryItems('%s/../' % root, workspaceRoot, not avoid_loop))
+        ))
+
     for directory in directories:
         item = getResultItem(directory)
         results.append(item)
 
     return results
 
-def getResultItems(data, workspacePath):
-    items = getDirectoryItems('%s/' % data['path'])
-    if data['path'] != workspacePath:
-        items.insert(0, ExtensionResultItem(
-            icon='images/back.svg',
-            name='Go back',
-            description='Go back to parent directory',
-            on_enter=RenderResultListAction(getDirectoryItems('%s/../' % data['path']))
-        ))
-
+def getResultItems(data, workspaceRoot):
     actions = [
         ExtensionResultItem(
             icon='images/technology.svg',
             name=data['name'],
             description='Directory %s' % data['name'],
             on_enter=DoNothingAction()
-        ),
-        ExtensionResultItem(
-            icon='images/back.svg',
-            name='Go back',
-            description='Go back to parent directory',
-            on_enter=RenderResultListAction(getDirectoryItems('%s/../' % data['path']))
         ),
         ExtensionResultItem(
             icon='images/icon.svg',
@@ -71,13 +67,9 @@ def getResultItems(data, workspacePath):
                 },
                 keep_app_open=True
             )
-        ),
-        ExtensionResultItem(
-            icon='images/project.svg',
-            name='Display directory content',
-            description='Display content of directory %s' % data['name'],
-            on_enter=RenderResultListAction(items)
         )
     ]
+    items = getDirectoryItems('%s/' % data['path'], workspaceRoot)
+    actions.extend(items)
 
     return actions
